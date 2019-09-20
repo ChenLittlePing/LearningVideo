@@ -1,3 +1,6 @@
+
+![](https://github.com/ChenLittlePing/LearningVideo/blob/master/cover.jpg)
+
 #### 简介
 
 本项目为【Android音视频开发入门】系列教程的代码实例，教程正在陆续完善中。

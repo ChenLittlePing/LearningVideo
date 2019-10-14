@@ -7,8 +7,8 @@ import android.view.Surface
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.cxp.learningvideo.media.BaseDecoder
-import com.cxp.learningvideo.media.extractor.VideoExtractor
 import com.cxp.learningvideo.media.IExtractor
+import com.cxp.learningvideo.media.extractor.VideoExtractor
 import java.nio.ByteBuffer
 
 

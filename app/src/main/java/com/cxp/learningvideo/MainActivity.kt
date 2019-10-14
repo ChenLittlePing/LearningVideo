@@ -1,14 +1,10 @@
 package com.cxp.learningvideo
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import com.cxp.learningvideo.media.decoder.AudioDecoder
-import com.cxp.learningvideo.media.decoder.VideoDecoder
-import com.cxp.learningvideo.media.muxer.MP4Repack
-import kotlinx.android.synthetic.main.activity_main.*
-import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
     val path = Environment.getExternalStorageDirectory().absolutePath + "/mvtest_2.mp4"
@@ -16,27 +12,21 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initPlayer()
     }
 
-    private fun initPlayer() {
-        val videoDecoder = VideoDecoder(path, sfv, null)
-        val threadPool = Executors.newFixedThreadPool(10)
-        threadPool.execute(videoDecoder)
-
-        val audioDecoder = AudioDecoder(path)
-        threadPool.execute(audioDecoder)
-
-        videoDecoder.goOn()
-        audioDecoder.goOn()
+    fun clickSimplePlayer(view: View) {
+        startActivity(Intent(this, SimplePlayerActivity::class.java))
     }
 
-    fun clickRepack(view: View) {
-        repack()
+    fun clickSimpleTriangle(view: View) {
+        val intent = Intent(this, SimpleRenderActivity::class.java)
+        intent.putExtra("type", 0)
+        startActivity(intent)
     }
 
-    private fun repack() {
-        val repack = MP4Repack(path)
-        repack.start()
+    fun clickSimpleTexture(view: View) {
+        val intent = Intent(this, SimpleRenderActivity::class.java)
+        intent.putExtra("type", 1)
+        startActivity(intent)
     }
 }

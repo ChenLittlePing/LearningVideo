@@ -32,8 +32,8 @@
 #### 目录
 ##### 一、Android音视频硬解码篇：
   - [x] 1，[音视频基础知识](https://www.jianshu.com/p/1749d2d43ecb)
-  - 2，音视频硬解码流程
-  - 3，音视频播放：音视频同步
+  - [x] 2，[音视频硬解码流程：封装基础解码框架](https://www.jianshu.com/p/ff65ef5207ce)
+  - [x] 3，[音视频播放：音视频同步](https://www.jianshu.com/p/ba8db84f8fe8)
   - 4，音视频解封和封装：生成一个MP4
   
 ##### 二、使用OpenGL渲染视频画面篇

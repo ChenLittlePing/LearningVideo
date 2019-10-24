@@ -37,7 +37,7 @@
   - [x] 4，[音视频解封和封装：生成一个MP4](https://www.jianshu.com/p/105147d75dfa)
   
 ##### 二、使用OpenGL渲染视频画面篇
-  - 1，初步了解OpenGL ES
+  - [x] 1，[初步了解OpenGL ES](https://www.jianshu.com/p/2158d4aec142)
   - 2，使用OpenGL渲染视频画面
   - 3，OpenGL渲染多视屏，实现画中画
   - 4，深入了解OpenGL之EGL

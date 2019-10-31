@@ -29,4 +29,8 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra("type", 1)
         startActivity(intent)
     }
+
+    fun clickOpenGLPlayer(view: View) {
+        startActivity(Intent(this, OpenGLPlayerActivity::class.java))
+    }
 }

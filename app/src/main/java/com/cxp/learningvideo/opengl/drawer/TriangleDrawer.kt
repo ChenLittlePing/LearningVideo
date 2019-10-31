@@ -1,5 +1,6 @@
 package com.cxp.learningvideo.opengl.drawer
 
+import android.graphics.SurfaceTexture
 import android.opengl.GLES20
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -15,7 +16,15 @@ import java.nio.FloatBuffer
  * @Datetime 2019-10-09 09:08
  *
  */
-class TriangleDrawer(): IDrawer {
+class TriangleDrawer: IDrawer {
+    override fun setVideoSize(videoW: Int, videoH: Int) {
+        
+    }
+
+    override fun setWorldSize(worldW: Int, worldH: Int) {
+        
+    }
+
     // 顶点坐标
     private val mVertexCoors = floatArrayOf(
         -1f, -1f,

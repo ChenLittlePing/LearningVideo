@@ -1,5 +1,7 @@
 package com.cxp.learningvideo.opengl.drawer
 
+import android.graphics.SurfaceTexture
+
 
 /**
  * 渲染器
@@ -11,7 +13,10 @@ package com.cxp.learningvideo.opengl.drawer
  *
  */
 interface IDrawer {
+    fun setVideoSize(videoW: Int, videoH: Int)
+    fun setWorldSize(worldW: Int, worldH: Int)
     fun draw()
     fun setTextureID(id: Int)
+    fun getSurfaceTexture(cb: (st: SurfaceTexture)->Unit) {}
     fun release()
 }

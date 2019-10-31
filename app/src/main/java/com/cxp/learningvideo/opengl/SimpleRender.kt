@@ -26,6 +26,7 @@ class SimpleRender(private val mDrawer: IDrawer): GLSurfaceView.Renderer {
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
         GLES20.glViewport(0, 0, width, height)
+        mDrawer.setWorldSize(width, height)
     }
 
     override fun onDrawFrame(gl: GL10?) {

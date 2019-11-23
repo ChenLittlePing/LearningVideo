@@ -58,11 +58,15 @@ class VideoDrawer : IDrawer {
     private var mTexturePosHandler: Int = -1
     // 纹理接收者
     private var mTextureHandler: Int = -1
+    // 半透值接收者
+    private var mAlphaHandler: Int = -1
 
     private lateinit var mVertexBuffer: FloatBuffer
     private lateinit var mTextureBuffer: FloatBuffer
 
     private var mMatrix: FloatArray? = null
+
+    private var mAlpha = 1f
 
     init {
         //【步骤1: 初始化顶点坐标】
@@ -84,6 +88,8 @@ class VideoDrawer : IDrawer {
         mTextureBuffer.position(0)
     }
 
+    private var mWidthRatio = 1f
+    private var mHeightRatio = 1f
     private fun initDefMatrix() {
         if (mMatrix != null) return
         if (mVideoWidth != -1 && mVideoHeight != -1 &&
@@ -94,37 +100,37 @@ class VideoDrawer : IDrawer {
             val worldRatio = mWorldWidth / mWorldHeight.toFloat()
             if (mWorldWidth > mWorldHeight) {
                 if (originRatio > worldRatio) {
-                    val actualRatio = worldRatio * originRatio
+                    mWidthRatio = worldRatio * originRatio
                     Matrix.orthoM(
                         prjMatrix, 0,
-                        -actualRatio, actualRatio,
-                        -1f, 1f,
+                        -mWidthRatio, mWidthRatio,
+                        -mHeightRatio, mHeightRatio,
                         3f, 5f
                     )
                 } else {// 原始比例小于窗口比例，缩放宽度会导致宽度度超出，因此，宽度以窗口为准，缩放高度
-                    val actualRatio = worldRatio * originRatio
+                    mHeightRatio = worldRatio * originRatio
                     Matrix.orthoM(
                         prjMatrix, 0,
-                        -1f, 1f,
-                        -actualRatio, actualRatio,
+                        -mWidthRatio, mWidthRatio,
+                        -mHeightRatio, mHeightRatio,
                         3f, 5f
                     )
                 }
             } else {
                 if (originRatio > worldRatio) {
-                    val actualRatio = originRatio / worldRatio
+                    mHeightRatio = originRatio / worldRatio
                     Matrix.orthoM(
                         prjMatrix, 0,
-                        -1f, 1f,
-                        -actualRatio, actualRatio,
+                        -mWidthRatio, mWidthRatio,
+                        -mHeightRatio, mHeightRatio,
                         3f, 5f
                     )
                 } else {// 原始比例小于窗口比例，缩放高度会导致高度超出，因此，高度以窗口为准，缩放宽度
-                    val actualRatio = originRatio / worldRatio
+                    mWidthRatio = originRatio / worldRatio
                     Matrix.orthoM(
                         prjMatrix, 0,
-                        -actualRatio, actualRatio,
-                        -1f, 1f,
+                        -mWidthRatio, mWidthRatio,
+                        -mHeightRatio, mHeightRatio,
                         3f, 5f
                     )
                 }
@@ -151,6 +157,10 @@ class VideoDrawer : IDrawer {
     override fun setWorldSize(worldW: Int, worldH: Int) {
         mWorldWidth = worldW
         mWorldHeight = worldH
+    }
+
+    override fun setAlpha(alpha: Float) {
+        mAlpha = alpha
     }
 
     override fun setTextureID(id: Int) {
@@ -195,6 +205,7 @@ class VideoDrawer : IDrawer {
             mVertexPosHandler = GLES20.glGetAttribLocation(mProgram, "aPosition")
             mTextureHandler = GLES20.glGetUniformLocation(mProgram, "uTexture")
             mTexturePosHandler = GLES20.glGetAttribLocation(mProgram, "aCoordinate")
+            mAlphaHandler = GLES20.glGetAttribLocation(mProgram, "alpha")
         }
         //使用OpenGL程序
         GLES20.glUseProgram(mProgram)
@@ -226,6 +237,7 @@ class VideoDrawer : IDrawer {
         //设置着色器参数， 第二个参数表示一个顶点包含的数据数量，这里为xy，所以为2
         GLES20.glVertexAttribPointer(mVertexPosHandler, 2, GLES20.GL_FLOAT, false, 0, mVertexBuffer)
         GLES20.glVertexAttribPointer(mTexturePosHandler, 2, GLES20.GL_FLOAT, false, 0, mTextureBuffer)
+        GLES20.glVertexAttrib1f(mAlphaHandler, mAlpha)
         //开始绘制
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
     }
@@ -240,12 +252,16 @@ class VideoDrawer : IDrawer {
 
     private fun getVertexShader(): String {
         return "attribute vec4 aPosition;" +
+                "precision mediump float;" +
                 "uniform mat4 uMatrix;" +
                 "attribute vec2 aCoordinate;" +
                 "varying vec2 vCoordinate;" +
+                "attribute float alpha;" +
+                "varying float inAlpha;" +
                 "void main() {" +
                 "    gl_Position = uMatrix*aPosition;" +
                 "    vCoordinate = aCoordinate;" +
+                "    inAlpha = alpha;" +
                 "}"
     }
 
@@ -254,9 +270,11 @@ class VideoDrawer : IDrawer {
         return "#extension GL_OES_EGL_image_external : require\n" +
                 "precision mediump float;" +
                 "varying vec2 vCoordinate;" +
+                "varying float inAlpha;" +
                 "uniform samplerExternalOES uTexture;" +
                 "void main() {" +
-                "  gl_FragColor=texture2D(uTexture, vCoordinate);" +
+                "  vec4 color = texture2D(uTexture, vCoordinate);" +
+                "  gl_FragColor = vec4(color.r, color.g, color.b, inAlpha);" +
                 "}"
     }
 
@@ -268,5 +286,15 @@ class VideoDrawer : IDrawer {
         GLES20.glCompileShader(shader)
 
         return shader
+    }
+
+    fun translate(dx: Float, dy: Float) {
+        Matrix.translateM(mMatrix, 0, dx*mWidthRatio*2, -dy*mHeightRatio*2, 0f)
+    }
+
+    fun scale(sx: Float, sy: Float) {
+        Matrix.scaleM(mMatrix, 0, sx, sy, 1f)
+        mWidthRatio /= sx
+        mHeightRatio /= sy
     }
 }

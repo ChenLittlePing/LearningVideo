@@ -39,7 +39,9 @@ class OpenGLPlayerActivity: AppCompatActivity() {
             initPlayer(Surface(it))
         }
         gl_surface.setEGLContextClientVersion(2)
-        gl_surface.setRenderer(SimpleRender(drawer))
+        val render = SimpleRender()
+        render.addDrawer(drawer)
+        gl_surface.setRenderer(render)
     }
 
     private fun initPlayer(sf: Surface) {

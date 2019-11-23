@@ -78,6 +78,9 @@ class BitmapDrawer(private val mBitmap: Bitmap): IDrawer {
 
     }
 
+    override fun setAlpha(alpha: Float) {
+    }
+
     override fun setTextureID(id: Int) {
         mTextureId = id
     }

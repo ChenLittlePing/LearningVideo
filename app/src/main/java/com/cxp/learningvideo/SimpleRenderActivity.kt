@@ -36,7 +36,9 @@ class SimpleRenderActivity : AppCompatActivity() {
 
     private fun initRender(drawer: IDrawer) {
         gl_surface.setEGLContextClientVersion(2)
-        gl_surface.setRenderer(SimpleRender(drawer))
+        val render = SimpleRender()
+        render.addDrawer(drawer)
+        gl_surface.setRenderer(render)
     }
 
     override fun onDestroy() {

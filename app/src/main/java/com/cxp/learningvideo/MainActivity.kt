@@ -12,6 +12,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        clickOpenGLPlayer(null)
     }
 
     fun clickSimplePlayer(view: View) {
@@ -30,7 +31,8 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun clickOpenGLPlayer(view: View) {
-        startActivity(Intent(this, OpenGLPlayerActivity::class.java))
+    fun clickOpenGLPlayer(view: View?) {
+//        startActivity(Intent(this, OpenGLPlayerActivity::class.java))
+        startActivity(Intent(this, MultiOpenGLPlayerActivity::class.java))
     }
 }

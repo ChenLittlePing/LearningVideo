@@ -23,6 +23,7 @@
         <activity android:name=".SimpleRenderActivity"/>
         <activity android:name=".SimplePlayerActivity"/>
         <activity android:name=".OpenGLPlayerActivity"/>
+        <activity android:name=".MultiOpenGLPlayerActivity"/>
     </application>
 
 </manifest>

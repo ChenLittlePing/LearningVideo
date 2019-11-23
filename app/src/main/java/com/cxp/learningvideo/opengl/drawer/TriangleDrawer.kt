@@ -1,6 +1,5 @@
 package com.cxp.learningvideo.opengl.drawer
 
-import android.graphics.SurfaceTexture
 import android.opengl.GLES20
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -71,6 +70,9 @@ class TriangleDrawer: IDrawer {
         mTextureBuffer = cc.asFloatBuffer()
         mTextureBuffer.put(mTextureCoors)
         mTextureBuffer.position(0)
+    }
+
+    override fun setAlpha(alpha: Float) {
     }
 
     override fun setTextureID(id: Int) {

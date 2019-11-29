@@ -11,7 +11,7 @@
 
 微信公众号：开发的猫
 
-![开发的猫](https://github.com/ChenLittlePing/LearningVideo/blob/4f09fd4e2cdc72f6424ae054a9b359828ee12ae9/qrcode_for_wx.jpg)
+![开发的猫](https://github.com/ChenLittlePing/LearningVideo/blob/6e54f71b7e9138da6268d57e198dfdeaa1d3a4d7/qrcode_for_wx.jpg)
 
 ##### 炙手可热，望而生畏的音视频开发
 

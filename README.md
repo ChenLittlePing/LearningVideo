@@ -6,8 +6,12 @@
 本项目为【Android音视频开发打怪升级】系列教程的代码实例，教程正在陆续完善中。
 
 **简书和微信公众号同步更新，欢迎关注**
-> 简书：https://www.jianshu.com/u/8c0a3b9c0e47  
+
+简书：https://www.jianshu.com/u/8c0a3b9c0e47  
+
 微信公众号：开发的猫
+
+![开发的猫](https://github.com/ChenLittlePing/LearningVideo/blob/4f09fd4e2cdc72f6424ae054a9b359828ee12ae9/qrcode_for_wx.jpg)
 
 ##### 炙手可热，望而生畏的音视频开发
 

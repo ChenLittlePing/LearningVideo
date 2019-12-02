@@ -29,5 +29,15 @@
             android:text="OpenGL 渲染视频"
             android:onClick="clickOpenGLPlayer"
     />
+    <Button android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="OpenGL 渲染多视频"
+            android:onClick="clickMultiOpenGLPlayer"
+    />
+    <Button android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="EGL 渲染视频"
+            android:onClick="clickEGLPlayer"
+    />
 
 </LinearLayout>

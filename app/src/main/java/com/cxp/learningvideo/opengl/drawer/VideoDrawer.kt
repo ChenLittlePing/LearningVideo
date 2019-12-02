@@ -100,15 +100,15 @@ class VideoDrawer : IDrawer {
             val worldRatio = mWorldWidth / mWorldHeight.toFloat()
             if (mWorldWidth > mWorldHeight) {
                 if (originRatio > worldRatio) {
-                    mWidthRatio = worldRatio * originRatio
+                    mHeightRatio = originRatio / worldRatio
                     Matrix.orthoM(
                         prjMatrix, 0,
                         -mWidthRatio, mWidthRatio,
                         -mHeightRatio, mHeightRatio,
                         3f, 5f
                     )
-                } else {// 原始比例小于窗口比例，缩放宽度会导致宽度度超出，因此，宽度以窗口为准，缩放高度
-                    mHeightRatio = worldRatio * originRatio
+                } else {// 原始比例小于窗口比例，缩放高度度会导致高度超出，因此，高度以窗口为准，缩放宽度
+                    mWidthRatio = worldRatio / originRatio
                     Matrix.orthoM(
                         prjMatrix, 0,
                         -mWidthRatio, mWidthRatio,
@@ -126,7 +126,7 @@ class VideoDrawer : IDrawer {
                         3f, 5f
                     )
                 } else {// 原始比例小于窗口比例，缩放高度会导致高度超出，因此，高度以窗口为准，缩放宽度
-                    mWidthRatio = originRatio / worldRatio
+                    mWidthRatio = worldRatio / originRatio
                     Matrix.orthoM(
                         prjMatrix, 0,
                         -mWidthRatio, mWidthRatio,

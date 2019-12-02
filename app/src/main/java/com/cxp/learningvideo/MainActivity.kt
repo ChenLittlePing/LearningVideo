@@ -2,17 +2,13 @@ package com.cxp.learningvideo
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 
 class MainActivity : AppCompatActivity() {
-    val path = Environment.getExternalStorageDirectory().absolutePath + "/mvtest_2.mp4"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        clickOpenGLPlayer(null)
     }
 
     fun clickSimplePlayer(view: View) {
@@ -32,7 +28,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun clickOpenGLPlayer(view: View?) {
-//        startActivity(Intent(this, OpenGLPlayerActivity::class.java))
+        startActivity(Intent(this, OpenGLPlayerActivity::class.java))
+    }
+
+    fun clickMultiOpenGLPlayer(view: View?) {
         startActivity(Intent(this, MultiOpenGLPlayerActivity::class.java))
+    }
+
+    fun clickEGLPlayer(view: View?) {
+        startActivity(Intent(this, EGLPlayerActivity::class.java))
     }
 }

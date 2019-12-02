@@ -21,7 +21,7 @@ const val FLAG_RECORDABLE = 0x01
 // 告诉EGL它创建的surface必须和视频编解码器兼容。
 // 没有这个标志，EGL可能会使用一个MediaCodec不能理解的Buffer
 // 这个变量在api26以后系统才自带有，为了兼容，我们自己写好这个值0x3142
-private const val EGL_RECORDABLE_ANDROID = 0x3142
+const val EGL_RECORDABLE_ANDROID = 0x3142
 
 class EGLCore {
 

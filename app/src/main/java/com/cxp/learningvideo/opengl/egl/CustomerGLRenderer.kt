@@ -1,6 +1,5 @@
 package com.cxp.learningvideo.opengl.egl
 
-import android.opengl.EGLExt.EGL_RECORDABLE_ANDROID
 import android.opengl.GLES20
 import android.view.SurfaceHolder
 import android.view.SurfaceView

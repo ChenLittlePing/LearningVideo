@@ -7,7 +7,9 @@
 
 **简书和微信公众号同步更新，欢迎关注**
 
-简书：https://www.jianshu.com/u/8c0a3b9c0e47  
+我在简书：https://www.jianshu.com/u/8c0a3b9c0e47  
+
+我在掘金：https://juejin.im/user/57c5b0040a2b58006c0a5132
 
 微信公众号：开发的猫
 

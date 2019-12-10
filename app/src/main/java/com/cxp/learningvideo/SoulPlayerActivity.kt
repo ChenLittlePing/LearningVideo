@@ -8,13 +8,13 @@ import com.cxp.learningvideo.media.decoder.AudioDecoder
 import com.cxp.learningvideo.media.decoder.VideoDecoder
 import com.cxp.learningvideo.opengl.SimpleRender
 import com.cxp.learningvideo.opengl.drawer.IDrawer
-import com.cxp.learningvideo.opengl.drawer.VideoDrawer
+import com.cxp.learningvideo.opengl.drawer.SoulVideoDrawer
 import kotlinx.android.synthetic.main.activity_opengl_player.*
 import java.util.concurrent.Executors
 
 
 /**
- * 使用OpenGL渲染的播放器
+ * 灵魂出窍播放
  *
  * @author Chen Xiaoping (562818444@qq.com)
  * @since LearningVideo
@@ -22,7 +22,7 @@ import java.util.concurrent.Executors
  * @Datetime 2019-10-26 21:07
  *
  */
-class OpenGLPlayerActivity: AppCompatActivity() {
+class SoulPlayerActivity: AppCompatActivity() {
     val path = Environment.getExternalStorageDirectory().absolutePath + "/mvtest.mp4"
     lateinit var drawer: IDrawer
 
@@ -33,7 +33,7 @@ class OpenGLPlayerActivity: AppCompatActivity() {
     }
 
     private fun initRender() {
-        drawer = VideoDrawer()
+        drawer = SoulVideoDrawer()
         drawer.setVideoSize(1920, 1080)
         drawer.getSurfaceTexture {
             initPlayer(Surface(it))

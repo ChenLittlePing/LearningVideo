@@ -39,5 +39,10 @@
             android:text="EGL 渲染视频"
             android:onClick="clickEGLPlayer"
     />
+    <Button android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="使用FBO实现 灵魂出窍效果"
+            android:onClick="clickSoulPlayer"
+    />
 
 </LinearLayout>

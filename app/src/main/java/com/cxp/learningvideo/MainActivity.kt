@@ -38,4 +38,8 @@ class MainActivity : AppCompatActivity() {
     fun clickEGLPlayer(view: View?) {
         startActivity(Intent(this, EGLPlayerActivity::class.java))
     }
+
+    fun clickSoulPlayer(view: View?) {
+        startActivity(Intent(this, SoulPlayerActivity::class.java))
+    }
 }

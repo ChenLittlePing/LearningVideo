@@ -25,6 +25,7 @@
         <activity android:name=".OpenGLPlayerActivity"/>
         <activity android:name=".MultiOpenGLPlayerActivity"/>
         <activity android:name=".EGLPlayerActivity"/>
+        <activity android:name=".SoulPlayerActivity"/>
     </application>
 
 </manifest>

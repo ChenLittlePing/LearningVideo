@@ -20,27 +20,30 @@ object OpenGLTools {
         return texture
     }
 
-    fun createFBOTexture(): IntArray {
+    fun createFBOTexture(width: Int, height: Int): Int {
         val textures = IntArray(1)
         GLES20.glGenTextures(1, textures, 0)
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0])
-        GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, 1080, 1710,
+        GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, GLES20.GL_RGBA, width, height,
             0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null)
         GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST.toFloat())
         GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER,GLES20.GL_LINEAR.toFloat())
         GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S,GLES20.GL_CLAMP_TO_EDGE.toFloat())
         GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,GLES20.GL_CLAMP_TO_EDGE.toFloat())
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,0)
-        return textures
+        return textures[0]
     }
 
-    fun bindFBO(texture: Int): IntArray {
-        val frames = IntArray(1)
-        GLES20.glGenFramebuffers(1, frames, 0)
-        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, frames[0])
+    fun createFrameBuffer(): Int {
+        val fbs = IntArray(1)
+        GLES20.glGenFramebuffers(1, fbs, 0)
+        return fbs[0]
+    }
+
+    fun bindFBO(fb: Int, textureId: Int) {
+        GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, fb)
         GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
-            GLES20.GL_TEXTURE_2D, texture, 0)
-        return frames
+            GLES20.GL_TEXTURE_2D, textureId, 0)
     }
 
     fun unbindFBO() {

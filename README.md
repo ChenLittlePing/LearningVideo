@@ -47,7 +47,7 @@
   - [x] 2，[使用OpenGL渲染视频画面](https://www.jianshu.com/p/176880b2b3a2)
   - [x] 3，[OpenGL渲染多视屏，实现画中画](https://www.jianshu.com/p/0e56e9678dd5)
   - [x] 4，[深入了解OpenGL之EGL](https://www.jianshu.com/p/9f4f6c72ef5a)
-  - 5，OpenGL FBO数据缓冲区
+  - [x] 5，[OpenGL FBO数据缓冲区](https://www.jianshu.com/p/1a7741608083)
   - 6，Android音视频硬编码：生成一个MP4
 
 ##### 三、Android FFmpeg音视频解码篇

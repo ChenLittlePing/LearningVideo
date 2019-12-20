@@ -113,7 +113,7 @@ interface IDecoder: Runnable {
     fun getFilePath(): String
 
     /**
-     * 作为合成器解码
+     * 无需音视频同步
      */
-    fun asCropper(): IDecoder
+    fun withoutSync(): IDecoder
 }

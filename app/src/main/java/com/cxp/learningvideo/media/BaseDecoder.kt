@@ -86,6 +86,9 @@ abstract class BaseDecoder(private val mFilePath: String): IDecoder {
      */
     private var mStartTimeForSync = -1L
 
+    // 是否需要音视频渲染同步
+    private var mSyncRender = true
+
     final override fun run() {
         if (mState == DecodeState.STOP) {
             mState = DecodeState.START
@@ -130,13 +133,23 @@ abstract class BaseDecoder(private val mFilePath: String): IDecoder {
                 val index = pullBufferFromDecoder()
                 if (index >= 0) {
                     // ---------【音视频同步】-------------
-                    if (mState == DecodeState.DECODING) {
+                    if (mSyncRender && mState == DecodeState.DECODING) {
                         sleepRender()
                     }
                     //【解码步骤：4. 渲染】
-                    render(mOutputBuffers!![index], mBufferInfo)
+                    if (mSyncRender) {// 如果只是用于编码合成新视频，无需渲染
+                        render(mOutputBuffers!![index], mBufferInfo)
+                    }
+
+                    //将解码数据传递出去
+                    val frame = Frame()
+                    frame.buffer = mOutputBuffers!![index]
+                    frame.setBufferInfo(mBufferInfo)
+                    mStateListener?.decodeOneFrame(this, frame)
+
                     //【解码步骤：5. 释放输出缓冲】
                     mCodec!!.releaseOutputBuffer(index, true)
+
                     if (mState == DecodeState.START) {
                         mState = DecodeState.PAUSE
                     }
@@ -149,7 +162,7 @@ abstract class BaseDecoder(private val mFilePath: String): IDecoder {
                 }
             }
         } catch (e: Exception) {
-
+            e.printStackTrace()
         } finally {
             doneDecode()
             release()
@@ -320,6 +333,7 @@ abstract class BaseDecoder(private val mFilePath: String): IDecoder {
     override fun stop() {
         mState = DecodeState.STOP
         mIsRunning = false
+        notifyDecode()
     }
 
     override fun isDecoding(): Boolean {
@@ -373,7 +387,8 @@ abstract class BaseDecoder(private val mFilePath: String): IDecoder {
         return mFilePath
     }
 
-    override fun asCropper(): IDecoder {
+    override fun withoutSync(): IDecoder {
+        mSyncRender = false
         return this
     }
 

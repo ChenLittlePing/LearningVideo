@@ -46,6 +46,12 @@ class EGLSurfaceHolder {
         }
     }
 
+    fun setTimestamp(timeMs: Long) {
+        if (mEGLSurface != null) {
+            mEGLCore.setPresentationTime(mEGLSurface!!, timeMs * 1000)
+        }
+    }
+
     fun destroyEGLSurface() {
         if (mEGLSurface != null) {
             mEGLCore.destroySurface(mEGLSurface!!)

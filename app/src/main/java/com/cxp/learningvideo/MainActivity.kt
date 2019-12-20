@@ -42,4 +42,8 @@ class MainActivity : AppCompatActivity() {
     fun clickSoulPlayer(view: View?) {
         startActivity(Intent(this, SoulPlayerActivity::class.java))
     }
+
+    fun clickEncoder(view: View?) {
+        startActivity(Intent(this, SynthesizerActivity::class.java))
+    }
 }

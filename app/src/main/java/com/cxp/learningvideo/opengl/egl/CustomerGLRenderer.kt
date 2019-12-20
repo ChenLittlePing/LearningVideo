@@ -1,6 +1,7 @@
 package com.cxp.learningvideo.opengl.egl
 
 import android.opengl.GLES20
+import android.view.Surface
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
@@ -17,7 +18,6 @@ import java.lang.ref.WeakReference
  * @author Chen Xiaoping (562818444@qq.com)
  * @since LearningVideo
  * @version LearningVideo
- * @Datetime 2019-12-01 10:59
  *
  */
 class CustomerGLRenderer : SurfaceHolder.Callback {
@@ -25,6 +25,8 @@ class CustomerGLRenderer : SurfaceHolder.Callback {
     private val mThread = RenderThread()
 
     private var mSurfaceView: WeakReference<SurfaceView>? = null
+
+    private var mSurface: Surface? = null
 
     private val mDrawers = mutableListOf<IDrawer>()
 
@@ -38,7 +40,7 @@ class CustomerGLRenderer : SurfaceHolder.Callback {
 
         surface.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener{
             override fun onViewDetachedFromWindow(v: View?) {
-                mThread.onSurfaceStop()
+                stop()
             }
 
             override fun onViewAttachedToWindow(v: View?) {
@@ -46,19 +48,39 @@ class CustomerGLRenderer : SurfaceHolder.Callback {
         })
     }
 
+    fun setSurface(surface: Surface, width: Int, height: Int) {
+        mSurface = surface
+        mThread.onSurfaceCreate()
+        mThread.onSurfaceChange(width, height)
+    }
+
+    fun setRenderMode(mode: RenderMode) {
+        mThread.setRenderMode(mode)
+    }
+
+    fun notifySwap(timeUs: Long) {
+        mThread.notifySwap(timeUs)
+    }
+
     fun addDrawer(drawer: IDrawer) {
         mDrawers.add(drawer)
     }
 
-    override fun surfaceCreated(holder: SurfaceHolder?) {
+    fun stop() {
+        mThread.onSurfaceStop()
+        mSurface = null
+    }
+
+    override fun surfaceCreated(holder: SurfaceHolder) {
+        mSurface = holder.surface
         mThread.onSurfaceCreate()
     }
 
-    override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
+    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
         mThread.onSurfaceChange(width, height)
     }
 
-    override fun surfaceDestroyed(holder: SurfaceHolder?) {
+    override fun surfaceDestroyed(holder: SurfaceHolder) {
         mThread.onSurfaceDestroy()
     }
 
@@ -80,6 +102,12 @@ class CustomerGLRenderer : SurfaceHolder.Callback {
 
         private val mWaitLock = Object()
 
+        private var mCurTimestamp = 0L
+
+        private var mLastTimestamp = 0L
+
+        private var mRenderMode = RenderMode.RENDER_WHEN_DIRTY
+
         private fun holdOn() {
             synchronized(mWaitLock) {
                 mWaitLock.wait()
@@ -90,6 +118,10 @@ class CustomerGLRenderer : SurfaceHolder.Callback {
             synchronized(mWaitLock) {
                 mWaitLock.notify()
             }
+        }
+
+        fun setRenderMode(mode: RenderMode) {
+            mRenderMode = mode
         }
 
         fun onSurfaceCreate() {
@@ -114,6 +146,13 @@ class CustomerGLRenderer : SurfaceHolder.Callback {
             notifyGo()
         }
 
+        fun notifySwap(timeUs: Long) {
+            synchronized(mCurTimestamp) {
+                mCurTimestamp = timeUs
+            }
+            notifyGo()
+        }
+
         override fun run() {
             initEGL()
             while (true) {
@@ -130,6 +169,9 @@ class CustomerGLRenderer : SurfaceHolder.Callback {
                     }
                     RenderState.RENDERING -> {
                         render()
+                        if (mRenderMode == RenderMode.RENDER_WHEN_DIRTY) {
+                            holdOn()
+                        }
                     }
                     RenderState.SURFACE_DESTROY -> {
                         destroyEGLSurface()
@@ -143,7 +185,9 @@ class CustomerGLRenderer : SurfaceHolder.Callback {
                         holdOn()
                     }
                 }
-                sleep(16)
+                if (mRenderMode == RenderMode.RENDER_CONTINUOUSLY) {
+                    sleep(16)
+                }
             }
         }
 
@@ -168,7 +212,7 @@ class CustomerGLRenderer : SurfaceHolder.Callback {
         }
 
         private fun createEGLSurface() {
-            mEGLSurface?.createEGLSurface(mSurfaceView?.get()?.holder?.surface)
+            mEGLSurface?.createEGLSurface(mSurface)
             mEGLSurface?.makeCurrent()
         }
 
@@ -184,9 +228,25 @@ class CustomerGLRenderer : SurfaceHolder.Callback {
         }
 
         private fun render() {
-            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
-            mDrawers.forEach { it.draw() }
-            mEGLSurface?.swapBuffers()
+            val render = if (mRenderMode == RenderMode.RENDER_CONTINUOUSLY) {
+                true
+            } else {
+                synchronized(mCurTimestamp) {
+                    if (mCurTimestamp > mLastTimestamp) {
+                        mLastTimestamp = mCurTimestamp
+                        true
+                    } else {
+                        false
+                    }
+                }
+            }
+
+            if (render) {
+                GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
+                mDrawers.forEach { it.draw() }
+                mEGLSurface?.setTimestamp(mCurTimestamp)
+                mEGLSurface?.swapBuffers()
+            }
         }
 
         private fun destroyEGLSurface() {
@@ -205,9 +265,14 @@ class CustomerGLRenderer : SurfaceHolder.Callback {
     enum class RenderState {
         NO_SURFACE, //没有有效的surface
         FRESH_SURFACE, //持有一个未初始化的新的surface
-        SURFACE_CHANGE, // surface尺寸变化
+        SURFACE_CHANGE, //surface尺寸变化
         RENDERING, //初始化完毕，可以开始渲染
         SURFACE_DESTROY, //surface销毁
         STOP //停止绘制
+    }
+
+    enum class RenderMode {
+        RENDER_CONTINUOUSLY,
+        RENDER_WHEN_DIRTY
     }
 }

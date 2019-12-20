@@ -26,6 +26,7 @@
         <activity android:name=".MultiOpenGLPlayerActivity"/>
         <activity android:name=".EGLPlayerActivity"/>
         <activity android:name=".SoulPlayerActivity"/>
+        <activity android:name=".SynthesizerActivity"/>
     </application>
 
 </manifest>

@@ -2,8 +2,8 @@ package com.cxp.learningvideo.media.decoder
 
 import android.media.*
 import com.cxp.learningvideo.media.BaseDecoder
-import com.cxp.learningvideo.media.extractor.AudioExtractor
 import com.cxp.learningvideo.media.IExtractor
+import com.cxp.learningvideo.media.extractor.AudioExtractor
 import java.nio.ByteBuffer
 
 

@@ -60,7 +60,8 @@ class MP4Repack(path: String) {
             }
             mAExtractor.stop()
             mVExtractor.stop()
-            mMuxer.release()
+            mMuxer.releaseAudioTrack()
+            mMuxer.releaseVideoTrack()
             Log.i(TAG, "MP4 重打包完成")
         }.start()
     }

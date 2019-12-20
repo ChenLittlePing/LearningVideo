@@ -62,7 +62,6 @@ class SynthesizerActivity: AppCompatActivity(), MMuxer.IMuxerStateListener {
     }
 
     private fun initVideoEncoder() {
-        videoEncoder
         // 视频编码器
         videoEncoder = VideoEncoder(muxer, 1920, 1080)
 

@@ -51,7 +51,7 @@
   - [x] 6，[Android音视频硬编码：生成一个MP4](https://www.jianshu.com/p/bfdeac7da147)
 
 ##### 三、Android FFmpeg音视频解码篇
-  - 1，FFmpeg so库编译
+  - [x] 1，[FFmpeg so库编译](https://www.jianshu.com/p/350f8e083e82)
   - 2，Android 引入FFmpeg
   - 3，Android FFmpeg视频解码播放
   - 4，Android FFmpeg＋OpenSL ES音频解码播放

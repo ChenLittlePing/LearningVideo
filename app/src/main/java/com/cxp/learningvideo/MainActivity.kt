@@ -46,4 +46,8 @@ class MainActivity : AppCompatActivity() {
     fun clickEncoder(view: View?) {
         startActivity(Intent(this, SynthesizerActivity::class.java))
     }
+
+    fun clickFFmpegInfo(view: View?) {
+        startActivity(Intent(this, FFmpegActivity::class.java))
+    }
 }

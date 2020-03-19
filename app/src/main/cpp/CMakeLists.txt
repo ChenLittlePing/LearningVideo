@@ -80,6 +80,24 @@ add_library( # Sets the name of the library.
 
         # Provides a relative path to your source file(s).
         native-lib.cpp
+
+        # 工具
+        ${CMAKE_SOURCE_DIR}/utils/logger.h
+        ${CMAKE_SOURCE_DIR}/utils/timer.c
+
+        # 播放器
+        ${CMAKE_SOURCE_DIR}/media//player.cpp
+
+        # 解码器
+        ${CMAKE_SOURCE_DIR}/media//one_frame.h
+        ${CMAKE_SOURCE_DIR}/media/decoder/i_decoder.h
+        ${CMAKE_SOURCE_DIR}/media/decoder/decode_state.h
+        ${CMAKE_SOURCE_DIR}/media/decoder/base_decoder.cpp
+        ${CMAKE_SOURCE_DIR}/media/decoder/video/v_decoder.cpp
+
+        # 渲染器
+        ${CMAKE_SOURCE_DIR}/media/render/video/video_render.h
+        ${CMAKE_SOURCE_DIR}/media/render/video/native_render/native_render.cpp
         )
 
 # 指定编译目标库时，cmake要链接的库
@@ -97,6 +115,7 @@ target_link_libraries(
         avformat
         avdevice
 
+        -landroid
         # Links the target library to the log library
         # included in the NDK.
         ${log-lib} )

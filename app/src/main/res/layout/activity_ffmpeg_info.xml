@@ -5,8 +5,16 @@
     <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <TextView android:id="@+id/tv"
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            <SurfaceView android:id="@+id/sfv"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp" />
+            <TextView android:id="@+id/tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+        </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

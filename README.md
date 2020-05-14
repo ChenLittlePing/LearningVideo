@@ -53,7 +53,7 @@
 ##### 三、Android FFmpeg音视频解码篇
   - [x] 1，[FFmpeg so库编译](https://www.jianshu.com/p/350f8e083e82)
   - [x] 2，[Android 引入FFmpeg](https://www.jianshu.com/p/2c9918546edc)
-  - 3，Android FFmpeg视频解码播放
+  - [x] 3，[Android FFmpeg视频解码播放](https://www.jianshu.com/p/d7c8f49d9ea4)
   - 4，Android FFmpeg＋OpenSL ES音频解码播放
   - 5，Android FFmpeg＋OpenGL ES播放视频
   - 6，Android FFmpeg简单合成MP4：视屏解封与重新封装

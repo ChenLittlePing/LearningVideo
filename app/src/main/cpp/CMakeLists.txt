@@ -84,6 +84,7 @@ add_library( # Sets the name of the library.
         # 工具
         ${CMAKE_SOURCE_DIR}/utils/logger.h
         ${CMAKE_SOURCE_DIR}/utils/timer.c
+        ${CMAKE_SOURCE_DIR}/utils/const.h
 
         # 播放器
         ${CMAKE_SOURCE_DIR}/media//player.cpp
@@ -94,10 +95,14 @@ add_library( # Sets the name of the library.
         ${CMAKE_SOURCE_DIR}/media/decoder/decode_state.h
         ${CMAKE_SOURCE_DIR}/media/decoder/base_decoder.cpp
         ${CMAKE_SOURCE_DIR}/media/decoder/video/v_decoder.cpp
+        ${CMAKE_SOURCE_DIR}/media/decoder/audio/a_decoder.cpp
 
         # 渲染器
         ${CMAKE_SOURCE_DIR}/media/render/video/video_render.h
         ${CMAKE_SOURCE_DIR}/media/render/video/native_render/native_render.cpp
+
+        ${CMAKE_SOURCE_DIR}/media/render/audio/audio_render.h
+        ${CMAKE_SOURCE_DIR}/media/render/audio/opensl_render.cpp
         )
 
 # 指定编译目标库时，cmake要链接的库
@@ -116,6 +121,7 @@ target_link_libraries(
         avdevice
 
         -landroid
+        OpenSLES
         # Links the target library to the log library
         # included in the NDK.
         ${log-lib} )

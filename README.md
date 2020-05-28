@@ -3,17 +3,17 @@
 
 #### 简介
 
-本项目为【Android音视频开发打怪升级】系列教程的代码实例，教程正在陆续完善中。
+> 本项目为【Android音视频开发打怪升级】系列教程的代码实例，教程正在陆续完善中。
 
-**简书和微信公众号同步更新，欢迎关注**
+**公众号、掘金、简书同步更新，欢迎关注**
 
-我在简书：https://www.jianshu.com/u/8c0a3b9c0e47  
+微信公众号：【开发的猫】文章首发地，欢迎扫码关注😄～
+
+![开发的猫](https://github.com/ChenLittlePing/LearningVideo/blob/6e54f71b7e9138da6268d57e198dfdeaa1d3a4d7/qrcode_for_wx.jpg)
 
 我在掘金：https://juejin.im/user/57c5b0040a2b58006c0a5132
 
-微信公众号：开发的猫
-
-![开发的猫](https://github.com/ChenLittlePing/LearningVideo/blob/6e54f71b7e9138da6268d57e198dfdeaa1d3a4d7/qrcode_for_wx.jpg)
+我在简书：https://www.jianshu.com/u/8c0a3b9c0e47  
 
 ##### 炙手可热，望而生畏的音视频开发
 
@@ -54,7 +54,7 @@
   - [x] 1，[FFmpeg so库编译](https://www.jianshu.com/p/350f8e083e82)
   - [x] 2，[Android 引入FFmpeg](https://www.jianshu.com/p/2c9918546edc)
   - [x] 3，[Android FFmpeg视频解码播放](https://www.jianshu.com/p/d7c8f49d9ea4)
-  - 4，Android FFmpeg＋OpenSL ES音频解码播放
+  - [x] 4，[Android FFmpeg＋OpenSL ES音频解码播放](https://www.jianshu.com/p/28fc978721b4)
   - 5，Android FFmpeg＋OpenGL ES播放视频
   - 6，Android FFmpeg简单合成MP4：视屏解封与重新封装
   - 7，Android FFmpeg视频编码

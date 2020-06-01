@@ -50,4 +50,8 @@ class MainActivity : AppCompatActivity() {
     fun clickFFmpegInfo(view: View?) {
         startActivity(Intent(this, FFmpegActivity::class.java))
     }
+
+    fun clickFFmpegGLPlayer(view: View?) {
+        startActivity(Intent(this, FFmpegGLPlayerActivity::class.java))
+    }
 }

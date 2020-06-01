@@ -53,6 +53,11 @@
             android:layout_height="wrap_content"
             android:text="FFmpeg信息打印/视频播放"
             android:onClick="clickFFmpegInfo"
-            />
+    />
+    <Button android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="FFmpeg + OpenGL 视频播放"
+            android:onClick="clickFFmpegGLPlayer"
+    />
 
 </LinearLayout>

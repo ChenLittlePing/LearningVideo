@@ -68,7 +68,7 @@ void AudioDecoder::Render(AVFrame *frame) {
     // 转换，返回每个通道的样本数
     int ret = swr_convert(m_swr, m_out_buffer, m_dest_data_size/2,
                           (const uint8_t **) frame->data, frame->nb_samples);
-    LOG_INFO("AudioDecoder", LogSpec(), "Render ret: %d", ret)
+//    LOG_INFO("AudioDecoder", LogSpec(), "Render ret: %d", ret)
     if (ret > 0) {
         m_render->Render(m_out_buffer[0], (size_t) m_dest_data_size);
     }

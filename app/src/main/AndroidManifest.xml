@@ -28,6 +28,7 @@
         <activity android:name=".SoulPlayerActivity"/>
         <activity android:name=".SynthesizerActivity"/>
         <activity android:name=".FFmpegActivity" />
+        <activity android:name=".FFmpegGLPlayerActivity" />
     </application>
 
 </manifest>

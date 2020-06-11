@@ -5,7 +5,8 @@
 #include <jni.h>
 #include <string>
 #include <unistd.h>
-#include "media/player.h"
+#include "media/player/def_player/player.h"
+#include "media/player/gl_player/gl_player.h"
 
 extern "C" {
     #include <libavcodec/avcodec.h>
@@ -49,7 +50,7 @@ extern "C" {
             jobject surface) {
             Player *player = new Player(env, path, surface);
             return (jint) player;
-        }
+    }
 
     JNIEXPORT void JNICALL
     Java_com_cxp_learningvideo_FFmpegActivity_play(JNIEnv *env,
@@ -65,5 +66,32 @@ extern "C" {
                                                    jint player) {
         Player *p = (Player *) player;
         p->pause();
+    }
+
+    JNIEXPORT jint JNICALL
+    Java_com_cxp_learningvideo_FFmpegGLPlayerActivity_createGLPlayer(JNIEnv *env,
+                                                           jobject  /* this */,
+                                                           jstring path,
+                                                           jobject surface) {
+        GLPlayer *player = new GLPlayer(env, path);
+        player->SetSurface(surface);
+        return (jint) player;
+    }
+
+    JNIEXPORT void JNICALL
+    Java_com_cxp_learningvideo_FFmpegGLPlayerActivity_playOrPause(JNIEnv *env,
+                                                   jobject  /* this */,
+                                                   jint player) {
+        GLPlayer *p = (GLPlayer *) player;
+        p->PlayOrPause();
+    }
+
+
+    JNIEXPORT void JNICALL
+    Java_com_cxp_learningvideo_FFmpegGLPlayerActivity_stop(JNIEnv *env,
+                                                          jobject  /* this */,
+                                                          jint player) {
+        GLPlayer *p = (GLPlayer *) player;
+        p->Release();
     }
 }

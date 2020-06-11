@@ -6,8 +6,11 @@
 #define LEARNINGVIDEO_PLAYER_H
 
 
-#include "decoder/video/v_decoder.h"
-#include "decoder/audio/a_decoder.h"
+#include "../../decoder/video/v_decoder.h"
+#include "../../decoder/audio/a_decoder.h"
+#include "../../../opengl/drawer/video_drawer.h"
+#include "../../../opengl/drawer/proxy/drawer_proxy.h"
+#include "../../render/video/opengl_render/opengl_render.h"
 
 class Player {
 private:

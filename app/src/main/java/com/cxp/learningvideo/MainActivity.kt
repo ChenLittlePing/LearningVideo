@@ -54,4 +54,8 @@ class MainActivity : AppCompatActivity() {
     fun clickFFmpegGLPlayer(view: View?) {
         startActivity(Intent(this, FFmpegGLPlayerActivity::class.java))
     }
+
+    fun clickFFmpegRepack(view: View?) {
+        startActivity(Intent(this, FFRepackActivity::class.java))
+    }
 }

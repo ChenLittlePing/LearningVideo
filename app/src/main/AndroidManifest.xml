@@ -29,6 +29,7 @@
         <activity android:name=".SynthesizerActivity"/>
         <activity android:name=".FFmpegActivity" />
         <activity android:name=".FFmpegGLPlayerActivity" />
+        <activity android:name=".FFRepackActivity" />
     </application>
 
 </manifest>

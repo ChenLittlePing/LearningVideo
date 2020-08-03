@@ -98,6 +98,9 @@ add_library( # Sets the name of the library.
         ${CMAKE_SOURCE_DIR}/media/decoder/video/v_decoder.cpp
         ${CMAKE_SOURCE_DIR}/media/decoder/audio/a_decoder.cpp
 
+        # 打包器
+        ${CMAKE_SOURCE_DIR}/media/muxer/ff_repack.cpp
+
         # 渲染器
         ${CMAKE_SOURCE_DIR}/media/render/video/video_render.h
         ${CMAKE_SOURCE_DIR}/media/render/video/native_render/native_render.cpp

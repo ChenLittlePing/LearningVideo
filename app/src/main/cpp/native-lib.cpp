@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include "media/player/def_player/player.h"
 #include "media/player/gl_player/gl_player.h"
+#include "media/muxer/ff_repack.h"
 
 extern "C" {
     #include <libavcodec/avcodec.h>
@@ -41,7 +42,6 @@ extern "C" {
         }
         return env->NewStringUTF(info);
     }
-
 
     JNIEXPORT jint JNICALL
     Java_com_cxp_learningvideo_FFmpegActivity_createPlayer(JNIEnv *env,
@@ -86,12 +86,28 @@ extern "C" {
         p->PlayOrPause();
     }
 
-
     JNIEXPORT void JNICALL
     Java_com_cxp_learningvideo_FFmpegGLPlayerActivity_stop(JNIEnv *env,
                                                           jobject  /* this */,
                                                           jint player) {
         GLPlayer *p = (GLPlayer *) player;
         p->Release();
+    }
+
+    JNIEXPORT jint JNICALL
+    Java_com_cxp_learningvideo_FFRepackActivity_createRepack(JNIEnv *env,
+                                                           jobject  /* this */,
+                                                           jstring srcPath,
+                                                           jstring destPath) {
+        FFRepack *repack = new FFRepack(env, srcPath, destPath);
+        return (jint) repack;
+    }
+
+    JNIEXPORT void JNICALL
+    Java_com_cxp_learningvideo_FFRepackActivity_startRepack(JNIEnv *env,
+                                                           jobject  /* this */,
+                                                           jint repack) {
+        FFRepack *ffRepack = (FFRepack *) repack;
+        ffRepack->Start();
     }
 }

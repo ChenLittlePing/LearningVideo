@@ -21,7 +21,7 @@ import java.util.concurrent.Executors
  *
  */
 class SimplePlayerActivity: AppCompatActivity() {
-    val path = Environment.getExternalStorageDirectory().absolutePath + "/mvtest_2.mp4"
+    val path = Environment.getExternalStorageDirectory().absolutePath + "/mvtest.mp4"
     lateinit var videoDecoder: VideoDecoder
     lateinit var audioDecoder: AudioDecoder
 

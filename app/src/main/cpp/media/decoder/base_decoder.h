@@ -157,6 +157,10 @@ public:
     long GetDuration() override;
     long GetCurPos() override;
 
+    void SetStateReceiver(IDecodeStateCb *cb) override {
+        m_state_cb = cb;
+    }
+
     char *GetStateStr() {
         switch (m_state) {
             case STOP: return (char *)"STOP";
@@ -169,6 +173,7 @@ public:
     }
 
 protected:
+    IDecodeStateCb *m_state_cb = NULL;
 
     /**
      * 是否为合成器提供解码
@@ -248,12 +253,14 @@ protected:
     /**
      * 进入等待
      */
-    void Wait(long second = 0);
+    void Wait(long second = 0, long ms = 0);
 
     /**
      * 恢复解码
      */
     void SendSignal();
+
+    void CallbackState(DecodeState status);
 };
 
 

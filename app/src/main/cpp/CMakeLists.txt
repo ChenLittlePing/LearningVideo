@@ -63,6 +63,15 @@ set_target_properties( avdevice
         PROPERTIES IMPORTED_LOCATION
         ${ffmpeg_lib_dir}/libavdevice.so )
 
+add_library( h264
+        SHARED
+        IMPORTED)
+set_target_properties( h264
+        PROPERTIES IMPORTED_LOCATION
+        ${ffmpeg_lib_dir}/libh264.so )
+
+include_directories(${ffmpeg_head_dir}/include)
+
 # 查找代码中使用到的系统库
 find_library( # Sets the name of the path variable.
         log-lib
@@ -84,22 +93,35 @@ add_library( # Sets the name of the library.
         # 工具
         ${CMAKE_SOURCE_DIR}/utils/logger.h
         ${CMAKE_SOURCE_DIR}/utils/timer.c
-        ${CMAKE_SOURCE_DIR}/utils/const.h
 
         # 播放器
         ${CMAKE_SOURCE_DIR}/media/player/def_player/player.cpp
         ${CMAKE_SOURCE_DIR}/media/player/gl_player/gl_player.cpp
 
         # 解码器
-        ${CMAKE_SOURCE_DIR}/media//one_frame.h
+        ${CMAKE_SOURCE_DIR}/media/one_frame.h
         ${CMAKE_SOURCE_DIR}/media/decoder/i_decoder.h
         ${CMAKE_SOURCE_DIR}/media/decoder/decode_state.h
+        ${CMAKE_SOURCE_DIR}/media/decoder/i_decode_state_cb.cpp
         ${CMAKE_SOURCE_DIR}/media/decoder/base_decoder.cpp
         ${CMAKE_SOURCE_DIR}/media/decoder/video/v_decoder.cpp
         ${CMAKE_SOURCE_DIR}/media/decoder/audio/a_decoder.cpp
 
+        # 编码器
+        ${CMAKE_SOURCE_DIR}/media/encoder/i_encoder.h
+        ${CMAKE_SOURCE_DIR}/media/encoder/base_encoder.cpp
+        ${CMAKE_SOURCE_DIR}/media/encoder/i_encode_state_cb.h
+        ${CMAKE_SOURCE_DIR}/media/encoder/video/v_encoder.cpp
+        ${CMAKE_SOURCE_DIR}/media/encoder/audio/a_encoder.cpp
+
+        ${CMAKE_SOURCE_DIR}/media/const.h
+
+
         # 打包器
         ${CMAKE_SOURCE_DIR}/media/muxer/ff_repack.cpp
+
+        ${CMAKE_SOURCE_DIR}/media/muxer/mp4_muxer.cpp
+        ${CMAKE_SOURCE_DIR}/media/muxer/i_muxer_cb.h
 
         # 渲染器
         ${CMAKE_SOURCE_DIR}/media/render/video/video_render.h
@@ -108,6 +130,7 @@ add_library( # Sets the name of the library.
 
         ${CMAKE_SOURCE_DIR}/media/render/audio/audio_render.h
         ${CMAKE_SOURCE_DIR}/media/render/audio/opensl_render.cpp
+        ${CMAKE_SOURCE_DIR}/media/render/video/opengl_render/opengl_pixel_receiver.h
 
         # OpenGL EGL核心
         ${CMAKE_SOURCE_DIR}/opengl/egl/egl_core.cpp
@@ -120,6 +143,9 @@ add_library( # Sets the name of the library.
         # OpenGL绘制代理器
         ${CMAKE_SOURCE_DIR}/opengl/drawer/proxy/drawer_proxy.cpp
         ${CMAKE_SOURCE_DIR}/opengl/drawer/proxy/def_drawer_proxy_impl.cpp
+
+        #合成器
+        ${CMAKE_SOURCE_DIR}/media/synthesizer/synthesizer.cpp
 )
 
 # 指定编译目标库时，cmake要链接的库
@@ -136,6 +162,7 @@ target_link_libraries(
         swscale
         avformat
         avdevice
+        h264
 
         -landroid
         OpenSLES

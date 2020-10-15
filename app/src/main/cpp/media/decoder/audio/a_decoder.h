@@ -8,7 +8,7 @@
 
 #include "../base_decoder.h"
 #include "../../render/audio/audio_render.h"
-#include "../../../utils/const.h"
+#include "../../const.h"
 
 extern "C" {
 #include <libswresample/swresample.h>
@@ -28,7 +28,7 @@ private:
     AudioRender *m_render = NULL;
 
     // 输出缓冲
-    uint8_t *m_out_buffer[1] = {NULL};
+    uint8_t *m_out_buffer[2] = {NULL, NULL};
 
     // 重采样后，每个通道包含的采样数
     // acc默认为1024，重采样后可能会变化
@@ -41,6 +41,11 @@ private:
      * 初始化转换工具
      */
     void InitSwr();
+
+    /**
+     * 计算重采样后通道采样数和帧数据大小
+     */
+    void CalculateSampleArgs();
 
     /**
      * 初始化输出缓冲
@@ -61,14 +66,22 @@ private:
      * 采样格式：16位
      */
     AVSampleFormat GetSampleFmt() {
-        return AV_SAMPLE_FMT_S16;
+        if (ForSynthesizer()) {
+            return ENCODE_AUDIO_DEST_FORMAT;
+        } else {
+            return AV_SAMPLE_FMT_S16;
+        }
     }
 
     /**
      * 采样率
      */
     int GetSampleRate(int spr) {
-        return AUDIO_DEST_SAMPLE_RATE;
+        if (ForSynthesizer()) {
+            return ENCODE_AUDIO_DEST_SAMPLE_RATE;
+        } else {
+            return spr;
+        }
     }
 
 public:

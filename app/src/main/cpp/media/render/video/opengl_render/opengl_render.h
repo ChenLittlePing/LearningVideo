@@ -12,6 +12,7 @@
 #include "../../../../opengl/drawer/drawer.h"
 #include "../../../../opengl/egl/egl_surface.h"
 #include "../../../../opengl/drawer/proxy/drawer_proxy.h"
+#include "opengl_pixel_receiver.h"
 #include <memory>
 
 
@@ -48,6 +49,10 @@ private:
     int m_window_width = 0;
     int m_window_height = 0;
 
+    bool m_need_output_pixels = false;
+
+    OpenGLPixelReceiver * m_pixel_receiver = NULL;
+
     STATE m_state = NO_SURFACE;
 
     // 初始化相关的方法
@@ -75,8 +80,13 @@ public:
     OpenGLRender(JNIEnv *env, DrawerProxy *drawer_proxy);
     ~OpenGLRender();
 
+    void SetPixelReceiver(OpenGLPixelReceiver *receiver) {
+        m_pixel_receiver = receiver;
+    }
+
     void SetSurface(jobject surface);
     void SetOffScreenSize(int width, int height);
+    void RequestRgbaData();
     void Stop();
 };
 

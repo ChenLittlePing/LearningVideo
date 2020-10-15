@@ -10,6 +10,7 @@
 
 class DrawerProxy {
 public:
+    virtual void AddDrawer(Drawer *drawer) = 0;
     virtual void Draw() = 0;
     virtual void Release() = 0;
     virtual ~DrawerProxy() {}

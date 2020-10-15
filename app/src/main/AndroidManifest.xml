@@ -30,6 +30,7 @@
         <activity android:name=".FFmpegActivity" />
         <activity android:name=".FFmpegGLPlayerActivity" />
         <activity android:name=".FFRepackActivity" />
+        <activity android:name=".FFEncodeActivity" />
     </application>
 
 </manifest>

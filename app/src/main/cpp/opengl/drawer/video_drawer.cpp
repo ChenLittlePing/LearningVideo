@@ -44,9 +44,9 @@ const char* VideoDrawer::GetFragmentShader() {
                             "void main() {\n"
                             "  vec4 color = texture2D(uTexture, vCoordinate);\n"
 //                            "  color.a = 0.5f;"
-                            "  gl_FragColor = color;\n"
-//                            "float gray = (color.r + color.g + color.b)/3.0;\n"
-//                            "gl_FragColor = vec4(gray, gray, gray, 1.0);\n"
+//                            "  gl_FragColor = color;\n"
+                            "float gray = (color.r + color.g + color.b)/3.0;\n"
+                            "gl_FragColor = vec4(gray, gray, gray, 1.0);\n"
 //                            "  gl_FragColor = vec4(1, 1, 1, 1);\n"
                             "}";
     return (char *)shader;

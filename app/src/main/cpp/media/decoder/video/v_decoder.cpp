@@ -67,12 +67,12 @@ void VideoDecoder::Render(AVFrame *frame) {
               height(), m_rgb_frame->data, m_rgb_frame->linesize);
     OneFrame * one_frame = new OneFrame(m_rgb_frame->data[0], m_rgb_frame->linesize[0], frame->pts, time_base(), NULL, false);
     m_video_render->Render(one_frame);
-//    if (m_state_cb != NULL) {
-//        m_state_cb->DecodeOneFrame(this, one_frame);
-//    }
-//    if (m_encoder_sync != NULL && m_encoder_sync->WaitForNextFrame(one_frame)) {
-//        Wait();
-//    }
+
+    if (m_state_cb != NULL) {
+        if (m_state_cb->DecodeOneFrame(this, one_frame)) {
+            Wait(0, 200);
+        }
+    }
 }
 
 bool VideoDecoder::NeedLoopDecode() {

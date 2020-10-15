@@ -43,12 +43,16 @@ void BaseDecoder::Decode(std::shared_ptr<BaseDecoder> that) {
         return;
     }
 
+    that->CallbackState(PREPARE);
+
     that->InitFFMpegDecoder(env);
     that->AllocFrameBuffer();
     av_usleep(1000);
     that->Prepare(env);
     that->LoopDecode();
     that->DoneDecode(env);
+
+    that->CallbackState(STOP);
 
     //解除线程和jvm关联
     that->m_jvm_for_thread->DetachCurrentThread();
@@ -94,9 +98,7 @@ void BaseDecoder::InitFFMpegDecoder(JNIEnv * env) {
 
     //4.3 获取解码器
 //    m_codec = avcodec_find_decoder_by_name("h264_mediacodec");//硬解码
-    if (m_codec == NULL) {
-        m_codec = avcodec_find_decoder(codecPar->codec_id);
-    }
+    m_codec = avcodec_find_decoder(codecPar->codec_id);
 
     //4.4 获取解码器上下文
     m_codec_ctx = avcodec_alloc_context3(m_codec);
@@ -131,12 +133,16 @@ void BaseDecoder::LoopDecode() {
         m_state = START;
     }
 
+    CallbackState(START);
+
     LOG_INFO(TAG, LogSpec(), "Start loop decode")
     while(1) {
         if (m_state != DECODING &&
             m_state != START &&
             m_state != STOP) {
+            CallbackState(m_state);
             Wait();
+            CallbackState(m_state);
             // 恢复同步起始时间，去除等待流失的时间
             m_started_t = GetCurMsTime() - m_cur_t_s;
         }
@@ -163,6 +169,7 @@ void BaseDecoder::LoopDecode() {
             } else {
                 m_state = FINISH;
             }
+            CallbackState(FINISH);
         }
     }
 }
@@ -196,7 +203,7 @@ AVFrame* BaseDecoder::DecodeOneFrame() {
                 av_packet_unref(m_packet);
                 return m_frame;
             } else {
-                LOG_INFO(TAG, LogSpec(), "Receive frame error result: %d", av_err2str(AVERROR(result)))
+                LOG_INFO(TAG, LogSpec(), "Receive frame error result: %s", av_err2str(AVERROR(result)))
             }
         }
         // 释放packet
@@ -204,8 +211,34 @@ AVFrame* BaseDecoder::DecodeOneFrame() {
         ret = av_read_frame(m_format_ctx, m_packet);
     }
     av_packet_unref(m_packet);
-    LOGI(TAG, "ret = %d", ret)
+    LOGI(TAG, "ret = %s", av_err2str(AVERROR(ret)))
     return NULL;
+}
+
+
+void BaseDecoder::CallbackState(DecodeState status) {
+    if (m_state_cb != NULL) {
+        switch (status) {
+            case PREPARE:
+                m_state_cb->DecodePrepare(this);
+                break;
+            case START:
+                m_state_cb->DecodeReady(this);
+                break;
+            case DECODING:
+                m_state_cb->DecodeRunning(this);
+                break;
+            case PAUSE:
+                m_state_cb->DecodePause(this);
+                break;
+            case FINISH:
+                m_state_cb->DecodeFinish(this);
+                break;
+            case STOP:
+                m_state_cb->DecodeStop(this);
+                break;
+        }
+    }
 }
 
 void BaseDecoder::ObtainTimeStamp() {
@@ -220,6 +253,10 @@ void BaseDecoder::ObtainTimeStamp() {
 }
 
 void BaseDecoder::SyncRender() {
+    if (ForSynthesizer()) {
+//        av_usleep(15000);
+        return;
+    }
     int64_t ct = GetCurMsTime();
     int64_t passTime = ct - m_started_t;
     if (m_cur_t_s > passTime) {
@@ -256,15 +293,16 @@ void BaseDecoder::DoneDecode(JNIEnv *env) {
     Release();
 }
 
-void BaseDecoder::Wait(long second) {
+void BaseDecoder::Wait(long second, long ms) {
 //    LOG_INFO(TAG, LogSpec(), "Decoder run into wait, state：%s", GetStateStr())
     pthread_mutex_lock(&m_mutex);
-    if (second > 0) {
+    if (second > 0 || ms > 0) {
         timeval now;
         timespec outtime;
         gettimeofday(&now, NULL);
-        outtime.tv_sec = now.tv_sec + second;
-        outtime.tv_nsec = now.tv_usec * 1000;
+        int64_t destNSec = now.tv_usec * 1000 + ms * 1000000;
+        outtime.tv_sec = static_cast<__kernel_time_t>(now.tv_sec + second + destNSec / 1000000000);
+        outtime.tv_nsec = static_cast<long>(destNSec % 1000000000);
         pthread_cond_timedwait(&m_cond, &m_mutex, &outtime);
     } else {
         pthread_cond_wait(&m_cond, &m_mutex);

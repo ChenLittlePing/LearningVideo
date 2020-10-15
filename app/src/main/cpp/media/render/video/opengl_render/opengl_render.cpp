@@ -109,6 +109,21 @@ void OpenGLRender::Render() {
     if (RENDERING == m_state) {
         m_drawer_proxy->Draw();
         m_egl_surface->SwapBuffers();
+
+        if (m_need_output_pixels && m_pixel_receiver != NULL) {//输出画面rgba
+            m_need_output_pixels = false;
+            Render(); //再次渲染最新的画面
+
+            size_t size = m_window_width * m_window_height * 4 * sizeof(uint8_t);
+
+            uint8_t *rgb = (uint8_t *) malloc(size);
+            if (rgb == NULL) {
+                realloc(rgb, size);
+                LOGE(TAG, "内存分配失败： %d", rgb)
+            }
+            glReadPixels(0, 0, m_window_width, m_window_height, GL_RGBA, GL_UNSIGNED_BYTE, rgb);
+            m_pixel_receiver->ReceivePixel(rgb);
+        }
     }
 }
 
@@ -155,6 +170,10 @@ void OpenGLRender::SetOffScreenSize(int width, int height) {
     m_window_width = width;
     m_window_height = height;
     m_state = FRESH_SURFACE;
+}
+
+void OpenGLRender::RequestRgbaData() {
+    m_need_output_pixels = true;
 }
 
 void OpenGLRender::Stop() {

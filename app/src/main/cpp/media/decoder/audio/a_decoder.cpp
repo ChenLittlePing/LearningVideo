@@ -3,6 +3,7 @@
 //
 
 #include "a_decoder.h"
+#include "../../const.h"
 
 AudioDecoder::AudioDecoder(JNIEnv *env, const jstring path, bool forSynthesizer) : BaseDecoder(
         env, path, forSynthesizer) {
@@ -21,6 +22,7 @@ void AudioDecoder::SetRender(AudioRender *render) {
 
 void AudioDecoder::Prepare(JNIEnv *env) {
     InitSwr();
+    CalculateSampleArgs();
     InitOutBuffer();
     InitRender();
 }
@@ -33,7 +35,7 @@ void AudioDecoder::InitSwr() {
     m_swr = swr_alloc();
 
     av_opt_set_int(m_swr, "in_channel_layout", codeCtx->channel_layout, 0);
-    av_opt_set_int(m_swr, "out_channel_layout", AUDIO_DEST_CHANNEL_LAYOUT, 0);
+    av_opt_set_int(m_swr, "out_channel_layout", ENCODE_AUDIO_DEST_CHANNEL_LAYOUT, 0);
 
     av_opt_set_int(m_swr, "in_sample_rate", codeCtx->sample_rate, 0);
     av_opt_set_int(m_swr, "out_sample_rate", GetSampleRate(codeCtx->sample_rate), 0);
@@ -47,30 +49,54 @@ void AudioDecoder::InitSwr() {
          codeCtx->sample_rate, codeCtx->channels, codeCtx->sample_fmt, codeCtx->frame_size,codeCtx->channel_layout)
 }
 
-void AudioDecoder::InitOutBuffer() {
+void AudioDecoder::CalculateSampleArgs() {
     // 重采样后一个通道采样数
     m_dest_nb_sample = (int)av_rescale_rnd(ACC_NB_SAMPLES, GetSampleRate(codec_cxt()->sample_rate),
                                            codec_cxt()->sample_rate, AV_ROUND_UP);
+
     // 重采样后一帧数据的大小
     m_dest_data_size = (size_t)av_samples_get_buffer_size(
-            NULL, AUDIO_DEST_CHANNEL_COUNTS,
+            NULL, ENCODE_AUDIO_DEST_CHANNEL_COUNTS,
             m_dest_nb_sample, GetSampleFmt(), 1);
+}
 
-    m_out_buffer[0] = (uint8_t *) malloc(m_dest_data_size);
+void AudioDecoder::InitOutBuffer() {
+    if (ForSynthesizer()) {
+//        if (m_out_buffer[0] == NULL) {
+            m_out_buffer[0] = (uint8_t *) malloc(m_dest_data_size / 2);
+            m_out_buffer[1] = (uint8_t *) malloc(m_dest_data_size / 2);
+//        }
+    } else {
+        m_out_buffer[0] = (uint8_t *) malloc(m_dest_data_size);
+    }
 }
 
 void AudioDecoder::InitRender() {
-    m_render->InitRender();
+    if (m_render != NULL) {
+        m_render->InitRender();
+    }
 };
 
 void AudioDecoder::Render(AVFrame *frame) {
 
+    InitOutBuffer();
+
     // 转换，返回每个通道的样本数
     int ret = swr_convert(m_swr, m_out_buffer, m_dest_data_size/2,
                           (const uint8_t **) frame->data, frame->nb_samples);
-//    LOG_INFO("AudioDecoder", LogSpec(), "Render ret: %d", ret)
+
     if (ret > 0) {
-        m_render->Render(m_out_buffer[0], (size_t) m_dest_data_size);
+        if (ForSynthesizer()) {
+            if (m_state_cb != NULL) {
+                OneFrame *one_frame = new OneFrame(m_out_buffer[0], m_dest_data_size, frame->pts,
+                                                   time_base(), m_out_buffer[1], true);
+                if (m_state_cb->DecodeOneFrame(this, one_frame)) {
+                    Wait(0, 200);
+                }
+            }
+        } else {
+            m_render->Render(m_out_buffer[0], (size_t) m_dest_data_size);
+        }
     }
 }
 

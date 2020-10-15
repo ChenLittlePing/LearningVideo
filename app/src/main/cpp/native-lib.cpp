@@ -8,12 +8,19 @@
 #include "media/player/def_player/player.h"
 #include "media/player/gl_player/gl_player.h"
 #include "media/muxer/ff_repack.h"
+#include "media/synthesizer/synthesizer.h"
 
 extern "C" {
     #include <libavcodec/avcodec.h>
     #include <libavformat/avformat.h>
     #include <libavfilter/avfilter.h>
     #include <libavcodec/jni.h>
+
+    JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved) {
+        av_jni_set_java_vm(vm, reserved);
+        LOG_INFO("JNI_OnLoad", "--------", "");
+        return JNI_VERSION_1_4;
+    }
 
     JNIEXPORT jstring JNICALL
     Java_com_cxp_learningvideo_FFmpegActivity_ffmpegInfo(JNIEnv *env, jobject  /* this */) {
@@ -109,5 +116,24 @@ extern "C" {
                                                            jint repack) {
         FFRepack *ffRepack = (FFRepack *) repack;
         ffRepack->Start();
+    }
+
+
+    JNIEXPORT jint JNICALL
+    Java_com_cxp_learningvideo_FFEncodeActivity_initEncoder(JNIEnv *env, jobject thiz, jstring inPath, jstring outPath) {
+        Synthesizer *synthesizer = new Synthesizer(env, inPath, outPath);
+        return (jint)synthesizer;
+    }
+
+    JNIEXPORT void JNICALL
+    Java_com_cxp_learningvideo_FFEncodeActivity_startEncoder(JNIEnv *env, jobject thiz, jint synthesizer) {
+        Synthesizer *s =  (Synthesizer *)synthesizer;
+        s->Start();
+    }
+
+    JNIEXPORT void JNICALL
+    Java_com_cxp_learningvideo_FFEncodeActivity_releaseEncoder(JNIEnv *env, jobject thiz, jint synthesizer) {
+        Synthesizer *s =  (Synthesizer *)synthesizer;
+        delete synthesizer;
     }
 }
